@@ -89,9 +89,6 @@ class ServerSession(CallbackDict, SessionMixin):
         self.permanent = True   #store the session. Without this, the session will not be stored
         self.session_id = session_id
 
-class NullSessionInterface(SessionInterface, SessionMixin):
-    def open_session(self, app, request):
-        return None
 
 class ServerSessionMixin(object):
     def generate_sessionid(self):
@@ -120,14 +117,11 @@ class ServerSessionInterface(SessionInterface, ServerSessionMixin):
         self.expire_time = expire_time
 
     def open_session(self, app, request):
-
-        #print(request)
         sessionid = request.cookies.get(app.session_cookie_name, None)
-        #print(sessionid)
         if sessionid is None:
             sessionid = self.generate_sessionid()
-            #print('sessionid:', type(sessionid))
             return ServerSession(session_id=sessionid)
+
         if self.use_sign and app.secret_key:
             signer = Signer(app.secret_key, salt='flask-redis-session',
                             key_derivation='hmac')
@@ -135,14 +129,12 @@ class ServerSessionInterface(SessionInterface, ServerSessionMixin):
                 sessionid = signer.unsign(sessionid).decode('utf-8')
             except BadSignature:
                 sessionid = None
-        #print('毛毛')
+
         data = self.redis.get(self.session_prefix + sessionid)
         if data is None:
             return ServerSession(session_id=sessionid)
         try:
             json_data = self.serialization_method.loads(data)
-            #print('json_data:', json_data)
-            #print('毛毛二号')
             return ServerSession(json_data, session_id=sessionid)
         except:
             return ServerSession(session_id=sessionid)
@@ -166,8 +158,6 @@ class ServerSessionInterface(SessionInterface, ServerSessionMixin):
         pipe.expire(self.session_prefix + session.session_id, total_seconds(self.expire_time))
         pipe.execute()
 
-        #print('毛毛四号')
-
         if self.use_sign:
             session_id = Signer(app.secret_key, salt='flask-redis-session',
                                 key_derivation='hmac').sign(session.session_id.encode('utf-8'))
@@ -175,9 +165,8 @@ class ServerSessionInterface(SessionInterface, ServerSessionMixin):
 
         else:
             session_id = session.session_id
-            #print('session_id:', session_id)
+            print('session_id:', session_id)
         response.set_cookie(key=app.session_cookie_name, value=session_id,
                             max_age=self.expire_time, expires=expire,
                             path=path, domain=domain,
                             secure=secure, httponly=httponly)
-        #print('傻逼么')

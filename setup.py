@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name='Flask-RedisSession',
-    version='0.1.2',
+    version='0.1.2.0',
     url='https://github.com/EricQAQ/Flask-Redis-Session',
     license='MIT',
     author='Eric Zhang',

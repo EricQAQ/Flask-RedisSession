@@ -1,6 +1,7 @@
 """
-    flask-redis-session
-    ----------------------------
+    flaskext.RedisSession.RedisSession
+    ~~~~~~~~~~~~
+
     The users can use this extension to add server-side session to your application.
     The flask/werkzeug uses client-side session, that is, the cookies, to store the state.
 
@@ -128,7 +129,7 @@ class ServerSessionInterface(SessionInterface, ServerSessionMixin):
             try:
                 sessionid = signer.unsign(sessionid).decode('utf-8')
             except BadSignature:
-                sessionid = None
+                sessionid = 'None'
 
         data = self.redis.get(self.session_prefix + sessionid)
         if data is None:

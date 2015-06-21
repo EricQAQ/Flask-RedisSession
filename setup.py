@@ -1,6 +1,6 @@
 
 """
-Flask-Redis-Session
+Flask-RedisSession
 -------------
 
 The users can use this extension to add server-side session to your application.
@@ -9,8 +9,8 @@ from setuptools import setup
 
 
 setup(
-    name='Flask-Redis-Session',
-    version='0.1',
+    name='Flask-RedisSession',
+    version='0.1.2',
     url='https://github.com/EricQAQ/Flask-Redis-Session',
     license='MIT',
     author='Eric Zhang',
@@ -23,7 +23,7 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=[
-        'Flask>=0.9'
+        'Flask>=0.8'
     ],
     classifiers=[
         'Environment :: Web Environment',
